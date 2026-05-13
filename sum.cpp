@@ -1,7 +1,7 @@
-#include <iostream>
-#include <vector>
-#include <omp.h>
-#include <time.h>
+#include <iostream>     // Input Output
+#include <vector>       // Vector container
+#include <omp.h>        // OpenMP for parallel programming
+#include <time.h>       // Time calculation
 
 using namespace std;
 
@@ -13,6 +13,7 @@ int seqSum(vector<int>& arr) {
 
     int sum = 0;
 
+    // Add all elements one by one
     for(int i = 0; i < arr.size(); i++) {
         sum += arr[i];
     }
@@ -24,8 +25,10 @@ int seqSum(vector<int>& arr) {
 // Sequential Average
 double seqAvg(vector<int>& arr) {
 
+    // Call sum function
     int sum = seqSum(arr);
 
+    // Average = Sum / Total Elements
     return (double)sum / arr.size();
 }
 
@@ -33,8 +36,10 @@ double seqAvg(vector<int>& arr) {
 // Sequential Minimum
 int seqMin(vector<int>& arr) {
 
+    // Assume first element is minimum
     int min_val = arr[0];
 
+    // Compare all elements
     for(int i = 0; i < arr.size(); i++) {
 
         if(arr[i] < min_val)
@@ -48,8 +53,10 @@ int seqMin(vector<int>& arr) {
 // Sequential Maximum
 int seqMax(vector<int>& arr) {
 
+    // Assume first element is maximum
     int max_val = arr[0];
 
+    // Compare all elements
     for(int i = 0; i < arr.size(); i++) {
 
         if(arr[i] > max_val)
@@ -68,6 +75,7 @@ int parSum(vector<int>& arr) {
 
     int sum = 0;
 
+    // Parallel loop with reduction
     #pragma omp parallel for reduction(+:sum)
     for(int i = 0; i < arr.size(); i++) {
 
@@ -81,8 +89,10 @@ int parSum(vector<int>& arr) {
 // Parallel Average
 double parAvg(vector<int>& arr) {
 
+    // Call parallel sum
     int sum = parSum(arr);
 
+    // Calculate average
     return (double)sum / arr.size();
 }
 
@@ -90,8 +100,10 @@ double parAvg(vector<int>& arr) {
 // Parallel Minimum
 int parMin(vector<int>& arr) {
 
+    // Assume first element minimum
     int min_val = arr[0];
 
+    // Parallel reduction for minimum
     #pragma omp parallel for reduction(min:min_val)
     for(int i = 0; i < arr.size(); i++) {
 
@@ -106,8 +118,10 @@ int parMin(vector<int>& arr) {
 // Parallel Maximum
 int parMax(vector<int>& arr) {
 
+    // Assume first element maximum
     int max_val = arr[0];
 
+    // Parallel reduction for maximum
     #pragma omp parallel for reduction(max:max_val)
     for(int i = 0; i < arr.size(); i++) {
 
@@ -129,8 +143,10 @@ int main() {
 
     int n = 100;
 
+    // Create array
     vector<int> arr(n);
 
+    // Generate random values
     for(int i = 0; i < n; i++) {
 
         arr[i] = rand() % 1000;
@@ -168,18 +184,23 @@ int main() {
     cout << "\n";
 
 
+    // Variables for timing
     clock_t start, end;
 
 
 
     // ================= SUM =================
 
+    // Start timer
     start = clock();
 
+    // Sequential Sum
     int s1 = seqSum(arr);
 
+    // End timer
     end = clock();
 
+    // Time calculation
     double seq_sum_time =
     ((double)(end - start) * 1000)
     / CLOCKS_PER_SEC;
@@ -191,6 +212,7 @@ int main() {
          << " ms\n";
 
 
+    // Parallel Sum
     start = clock();
 
     int s2 = parSum(arr);
@@ -207,6 +229,7 @@ int main() {
          << par_sum_time
          << " ms\n";
 
+    // Speedup Formula
     cout << "Speedup = "
          << seq_sum_time / par_sum_time
          << "\n";
