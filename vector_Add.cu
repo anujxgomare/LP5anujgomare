@@ -55,3 +55,5 @@ int main()
 
     return 0;
 }
+// !nvcc mcm.cu -o mcm
+// !./mcm

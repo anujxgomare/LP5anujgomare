@@ -11,13 +11,13 @@ __global__ void matmul(int* A, int* B, int* C, int N)
     if (Row < N && Col < N)
     {
         int Pvalue = 0;
-
+//Matrix Multiplication Loop
         for (int k = 0; k < N; k++)
         {
-            Pvalue += A[Row * N + k] * B[k * N + Col];
+            Pvalue += A[Row * N + k] * B[k * N + Col];//computes one matrix cell
         }
 
-        C[Row * N + Col] = Pvalue;
+        C[Row * N + Col] = Pvalue;//stores matrix result
     }
 }
 
@@ -54,7 +54,7 @@ int main()
     cudaMemcpy(dev_B, B, size, cudaMemcpyHostToDevice);
 
     // Define block and grid size
-    dim3 dimBlock(16, 16);
+    dim3 dimBlock(16, 16);//Each block:16 × 16 threads
     dim3 dimGrid((N + dimBlock.x - 1) / dimBlock.x,
                  (N + dimBlock.y - 1) / dimBlock.y);
 
@@ -84,4 +84,6 @@ int main()
     cudaFreeHost(C);
 
     return 0;
-}
+}  
+// !nvcc mcm.cu -o mcm
+// !./mcm
